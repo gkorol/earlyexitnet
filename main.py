@@ -258,7 +258,7 @@ def train_joint(model, train_dl, valid_dl, batch_size, save_path, opt=None,
     return best_val_accu[1],savepoint
 
 class Tester:
-    def __init__(self,model,test_dl,loss_f=nn.CrossEntropyLoss(),exits=2):
+    def __init__(self,model,test_dl,loss_f=nn.CrossEntropyLoss(),exits=2,gpu_no=0):
         self.model=model
         self.test_dl=test_dl
         self.loss_f=loss_f
@@ -289,10 +289,16 @@ class Tester:
         self.top1_accu_tot = None #total accuracy of network given exit strat
         self.entr_accu_tot = None #total accuracy of network given exit strat
 
+        self.device = torch.device("cuda" if gpu_no >= 0 else "cpu")
+
     def _test_multi_exit(self):
+        self.model.to(self.device)
         self.model.eval()
         with torch.no_grad():
             for xb,yb in self.test_dl:
+                xb = xb.to(device)
+                yb = yb.to(device)
+
                 res = self.model(xb)
                 self.accu_track_totl.update_correct(res,yb)
                 for i,(exit,thr) in enumerate(zip(res,self.top1acc_thresholds)):
@@ -312,15 +318,23 @@ class Tester:
                         self.accu_track_entr.update_correct(exit,yb,bin_index=i)
                         break
     def _test_single_exit(self):
+        self.model.to(self.device)
         self.model.eval()
         with torch.no_grad():
             for xb,yb in self.test_dl:
+                xb = xb.to(device)
+                yb = yb.to(device)
+
                 res = self.model(xb)
                 self.accu_track_totl.update_correct(res,yb)
     def debug_values(self):
+        self.model.to(self.device)
         self.model.eval()
         with torch.no_grad():
             for xb,yb in test_dl:
+                xb = xb.to(device)
+                yb = yb.to(device)
+                
                 res = self.model(xb)
                 for i,exit in enumerate(res):
                     #print("raw exit {}: {}".format(i, exit))
