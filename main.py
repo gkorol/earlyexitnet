@@ -88,6 +88,9 @@ def train_backbone(model, train_dl, valid_dl, batch_size, save_path, epochs=50,
         model.eval()
         with torch.no_grad():
             for xb,yb in valid_dl:
+                xb = xb.to(device)
+                yb = yb.to(device)
+
                 res_v = model(xb)
                 validloss_trk.add_loss(loss_f(res_v[-1], yb))
                 validaccu_trk.update_correct(res_v[-1],yb)
@@ -180,7 +183,7 @@ def train_joint(model, train_dl, valid_dl, batch_size, save_path, opt=None,
         for xb, yb in train_dl:
             xb = xb.to(device)
             yb = yb.to(device)
-            
+
             results = model(xb)
 
             raw_losses = [loss_f(res,yb) for res in results]
@@ -211,6 +214,9 @@ def train_joint(model, train_dl, valid_dl, batch_size, save_path, opt=None,
         model.eval()
         with torch.no_grad():
             for xb,yb in valid_dl:
+                xb = xb.to(device)
+                yb = yb.to(device)
+
                 res = model(xb)
                 valid_loss_trk.add_loss([loss_f(exit, yb) for exit in res])
                 valid_accu_trk.update_correct(res,yb)
