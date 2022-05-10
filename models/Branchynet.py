@@ -120,7 +120,7 @@ class B_Lenet(nn.Module):
             top1 = torch.max(pk) #x)
             return top1 > self.exit_threshold
 
-    @torch.jit.unused #decorator to skip jit comp
+    # @torch.jit.unused #decorator to skip jit comp
     def _forward_training(self, x):
         #TODO make jit compatible - not urgent
         #broken because returning list()
