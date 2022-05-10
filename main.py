@@ -24,7 +24,7 @@ def get_num_correct(preds, labels):
 
 #TODO might merge exit+backbone for code reuse
 def train_backbone(model, train_dl, valid_dl, batch_size, save_path, epochs=50,
-                    loss_f=nn.CrossEntropyLoss(), opt=None, dat_norm=False):
+                    loss_f=nn.CrossEntropyLoss(), opt=None, dat_norm=False, gpu_no=0):
     #train network backbone
 
     if opt is None:
@@ -46,6 +46,9 @@ def train_backbone(model, train_dl, valid_dl, batch_size, save_path, epochs=50,
     trainaccu_trk = AccuTracker(batch_size,1)
     validloss_trk = LossTracker(batch_size,1)
     validaccu_trk = AccuTracker(batch_size,1)
+
+    device = torch.device("cuda" if gpu_no >= 0 else "cpu")
+    model = model.to(device)
 
     for epoch in range(epochs):
         model.train()
@@ -129,7 +132,7 @@ def train_joint(model, train_dl, valid_dl, batch_size, save_path, opt=None,
         folder_path = 'pre_Trn_bb_' + timestamp
         best_bb_path,_ = train_backbone(model, train_dl,
                 valid_dl, batch_size, os.path.join(save_path, folder_path),
-                epochs=backbone_epochs, loss_f=loss_f,dat_norm=dat_norm)
+                epochs=backbone_epochs, loss_f=loss_f,dat_norm=dat_norm, gpu_no=args.gpu_no)
         #train the rest...
         print("LOADING BEST BACKBONE:",best_bb_path)
         load_model(model, best_bb_path)
@@ -402,7 +405,7 @@ def train_n_test(args):
             path_str = f'outputs/bb_only/'
             save_path,last_path = train_backbone(model, train_dl, valid_dl,
                     batch_size=batch_size_train, save_path=path_str, epochs=args.bb_epochs,
-                    loss_f=loss_f, opt=opt, dat_norm=normalise)
+                    loss_f=loss_f, opt=opt, dat_norm=normalise, gpu_no=args.gpu_no)
 
         #save some notes about the run
         notes_path = os.path.join(os.path.split(save_path)[0],'notes.txt')

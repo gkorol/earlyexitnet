@@ -38,6 +38,9 @@ def main():
     parser.add_argument('--seed', metavar='N', type=int, default=random.randint(0,2**32-1),
         help='Seed for training, NOT CURRENTLY USED')
 
+    parser.add_argument('--gpu_no', metavar='N', type=int, default=0,
+        help='GPU id for use, -1 for none')
+
     #TODO arguments to add
         #batch size training
         #batch size testing
