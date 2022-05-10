@@ -311,7 +311,8 @@ class Tester:
                         break
                 for i,(exit,thr) in enumerate(zip(res,self.entropy_thresholds)):
                     softmax = nn.functional.softmax(exit,dim=-1)
-                    entr = -torch.sum(torch.nan_to_num(softmax * torch.log(softmax)))
+                    # entr = -torch.sum(torch.nan_to_num(softmax * torch.log(softmax)))
+                    entr = -torch.sum(softmax * torch.log(softmax)) # old PyTorch doesnt have nan_to_num
                     if entr < thr:
                         #print("entr exited at exit {}".format(i))
                         self.exit_track_entr.add_val(1,i)
