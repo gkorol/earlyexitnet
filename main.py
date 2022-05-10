@@ -214,8 +214,8 @@ def train_joint(model, train_dl, valid_dl, batch_size, save_path, opt=None,
         model.eval()
         with torch.no_grad():
             for xb,yb in valid_dl:
-                xb = xb.to(device)
-                yb = yb.to(device)
+                xb = xb.to(self.device)
+                yb = yb.to(self.device)
 
                 res = model(xb)
                 valid_loss_trk.add_loss([loss_f(exit, yb) for exit in res])
@@ -296,8 +296,8 @@ class Tester:
         self.model.eval()
         with torch.no_grad():
             for xb,yb in self.test_dl:
-                xb = xb.to(device)
-                yb = yb.to(device)
+                xb = xb.to(self.device)
+                yb = yb.to(self.device)
 
                 res = self.model(xb)
                 self.accu_track_totl.update_correct(res,yb)
@@ -322,8 +322,8 @@ class Tester:
         self.model.eval()
         with torch.no_grad():
             for xb,yb in self.test_dl:
-                xb = xb.to(device)
-                yb = yb.to(device)
+                xb = xb.to(self.device)
+                yb = yb.to(self.device)
 
                 res = self.model(xb)
                 self.accu_track_totl.update_correct(res,yb)
@@ -332,9 +332,9 @@ class Tester:
         self.model.eval()
         with torch.no_grad():
             for xb,yb in test_dl:
-                xb = xb.to(device)
-                yb = yb.to(device)
-                
+                xb = xb.to(self.device)
+                yb = yb.to(self.device)
+
                 res = self.model(xb)
                 for i,exit in enumerate(res):
                     #print("raw exit {}: {}".format(i, exit))
