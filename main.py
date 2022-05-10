@@ -123,7 +123,7 @@ def train_exits(model, epochs=100):
 
 def train_joint(model, train_dl, valid_dl, batch_size, save_path, opt=None,
                 loss_f=nn.CrossEntropyLoss(), backbone_epochs=50,
-                joint_epochs=100, pretrain_backbone=True, dat_norm=False):
+                joint_epochs=100, pretrain_backbone=True, dat_norm=False,gpu_no=0):
 
     timestamp = dt.now().strftime("%Y-%m-%d_%H%M%S")
 
@@ -132,7 +132,7 @@ def train_joint(model, train_dl, valid_dl, batch_size, save_path, opt=None,
         folder_path = 'pre_Trn_bb_' + timestamp
         best_bb_path,_ = train_backbone(model, train_dl,
                 valid_dl, batch_size, os.path.join(save_path, folder_path),
-                epochs=backbone_epochs, loss_f=loss_f,dat_norm=dat_norm, gpu_no=args.gpu_no)
+                epochs=backbone_epochs, loss_f=loss_f,dat_norm=dat_norm, gpu_no=gpu_no)
         #train the rest...
         print("LOADING BEST BACKBONE:",best_bb_path)
         load_model(model, best_bb_path)
@@ -394,7 +394,7 @@ def train_n_test(args):
         if exits > 1:
             save_path,last_path = train_joint(model, train_dl, valid_dl, batch_size_train,
                     path_str,backbone_epochs=args.bb_epochs,joint_epochs=args.jt_epochs,
-                    loss_f=loss_f,pretrain_backbone=True,dat_norm=normalise)
+                    loss_f=loss_f,pretrain_backbone=True,dat_norm=normalise, gpu_no=args.gpu_no)
         else:
             #provide optimiser for non ee network
             lr = 0.001 #Adam algo - step size alpha=0.001
