@@ -63,6 +63,9 @@ def train_backbone(model, train_dl, valid_dl, batch_size, save_path, epochs=50,
 
         #training loop
         for xb, yb in train_dl:
+            xb = xb.to(device)
+            yb = yb.to(device)
+
             results = model(xb)
             #loss for backbone ignores other exits
             #Wasting some forward compute of early exits
@@ -162,6 +165,10 @@ def train_joint(model, train_dl, valid_dl, batch_size, save_path, opt=None,
     train_accu_trk = AccuTracker(train_dl.batch_size,bins=2)
     valid_loss_trk = LossTracker(valid_dl.batch_size,bins=2)
     valid_accu_trk = AccuTracker(valid_dl.batch_size,bins=2)
+
+    device = torch.device("cuda" if gpu_no >= 0 else "cpu")
+    model = model.to(device)
+
     for epoch in range(joint_epochs):
         model.train()
         print("starting epoch:", epoch+1, end="... ", flush=True)
@@ -171,6 +178,9 @@ def train_joint(model, train_dl, valid_dl, batch_size, save_path, opt=None,
         train_accu_trk.reset_tracker()
         #training loop
         for xb, yb in train_dl:
+            xb = xb.to(device)
+            yb = yb.to(device)
+            
             results = model(xb)
 
             raw_losses = [loss_f(res,yb) for res in results]
