@@ -53,8 +53,8 @@ class B_Lenet(nn.Module):
             #this includes the individual classifier layers, can keep separate
             #last branch/classif being terminal linear layer-included here not main net
 
-        # self.fast_inference_mode = False
-        self.fast_inference_mode = True
+        self.fast_inference_mode = False
+        # self.fast_inference_mode = True
         #self.fast_inf_batch_size = fast_inf_batch_size #add to input args if used
         #self.exit_fn = entropy
         self.exit_threshold = torch.tensor([exit_threshold], dtype=torch.float32) #TODO learnable, better default value
@@ -119,7 +119,6 @@ class B_Lenet(nn.Module):
         with torch.no_grad():
             pk = nn.functional.softmax(x, dim=-1)
             top1 = torch.max(pk) #x)
-            self.exit_threshold = self.exit_threshold.to('cuda')
             return top1 > self.exit_threshold
 
     # @torch.jit.unused #decorator to skip jit comp
