@@ -403,6 +403,7 @@ def train_n_test(args):
         load_model(model, args.trained_model_path)
         #skip to testing
         datacoll = MNISTDataColl(batch_size_test=batch_size_test)
+        print("Got test data, batch size:",batch_size_test)
         #TODO make use of profiling split
         notes_path = os.path.join(os.path.split(args.trained_model_path)[0],'notes.txt')
         save_path = args.trained_model_path
