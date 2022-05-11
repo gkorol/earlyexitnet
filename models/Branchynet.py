@@ -45,7 +45,7 @@ class ConvPoolAc(nn.Module):
 class B_Lenet(nn.Module):
     def __init__(self, exit_threshold=0.5):
         super(B_Lenet, self).__init__()
-
+        print("Branchy Lenet")
         # call function to build layers
             #probably need to fragment the model into a moduleList
             #having distinct indices to compute the classfiers/branches on
