@@ -132,8 +132,6 @@ class B_Lenet(nn.Module):
 
     def forward(self, x):
         #std forward function - add var to distinguish be test and inf
-        print("Forward")
-
         if self.fast_inference_mode:
             print("On Fast Inference Mode")
             for bb, ee in zip(self.backbone, self.exits):
