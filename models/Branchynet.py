@@ -132,6 +132,7 @@ class B_Lenet(nn.Module):
 
     def forward(self, x):
         #std forward function - add var to distinguish be test and inf
+        print("Forward")
 
         if self.fast_inference_mode:
             print("On Fast Inference Mode")
@@ -160,6 +161,7 @@ class B_Lenet(nn.Module):
 
         else: #used for training
             #calculate all exits
+            print("Calculating on all exits")
             return self._forward_training(x)
 
     def set_fast_inf_mode(self, mode=True):
